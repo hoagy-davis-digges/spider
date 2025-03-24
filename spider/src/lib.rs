@@ -117,7 +117,12 @@ pub extern crate hashbrown;
 extern crate log;
 pub extern crate percent_encoding;
 pub extern crate quick_xml;
+#[cfg(not(feature = "rquest"))]
 pub extern crate reqwest;
+#[cfg(feature = "rquest")]
+pub extern crate rquest;
+#[cfg(all(feature = "rquest", not(feature = "cache_request")))]
+pub use rquest as reqwest;
 pub extern crate smallvec;
 pub extern crate tokio;
 pub extern crate tokio_stream;
@@ -188,18 +193,24 @@ pub mod black_list {
 }
 
 /// The asynchronous Client to make requests with.
-#[cfg(not(feature = "cache_request"))]
+#[cfg(all(not(feature = "cache_request"), not(feature = "rquest")))]
 pub type Client = reqwest::Client;
-#[cfg(not(feature = "cache_request"))]
 /// The asynchronous Client Builder.
+#[cfg(all(not(feature = "cache_request"), not(feature = "rquest")))]
 pub type ClientBuilder = reqwest::ClientBuilder;
 
 /// The asynchronous Client to make requests with HTTP Cache.
 #[cfg(feature = "cache_request")]
 pub type Client = reqwest_middleware::ClientWithMiddleware;
 #[cfg(feature = "cache_request")]
-/// The asynchronous Client Builder.
+
+/// The asynchronous Client Builder with TLS fingerprint mocking.
 pub type ClientBuilder = reqwest_middleware::ClientBuilder;
+#[cfg(all(feature = "rquest", not(feature = "cache_request")))]
+pub type Client = rquest::Client;
+#[cfg(all(feature = "rquest", not(feature = "cache_request")))]
+pub type ClientBuilder = rquest::ClientBuilder;
+
 
 /// The selectors type. The values are held to make sure the relative domain can be crawled upon base redirects.
 pub type RelativeSelectors = (

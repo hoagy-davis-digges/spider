@@ -8,12 +8,13 @@ use crate::utils::{
 use crate::CaseInsensitiveString;
 use crate::Client;
 use crate::RelativeSelectors;
+use crate::reqwest;
+use reqwest::StatusCode;
 use auto_encoder::auto_encode_bytes;
 use hashbrown::HashSet;
 use lol_html::AsciiCompatibleEncoding;
 use phf::phf_set;
 use regex::bytes::Regex;
-use reqwest::StatusCode;
 use tokio::time::Duration;
 
 #[cfg(all(feature = "time", not(feature = "decentralized")))]

@@ -31,8 +31,8 @@ use crate::Client;
 use hashbrown::HashSet;
 #[cfg(feature = "regex")]
 use regex::RegexSet;
-use reqwest::Response;
-use reqwest::StatusCode;
+use crate::reqwest::Response;
+use crate::reqwest::StatusCode;
 use std::time::{Duration, SystemTime, UNIX_EPOCH};
 
 /// A rule line is a single "Allow:" (allowance==True) or "Disallow:"

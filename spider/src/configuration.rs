@@ -9,6 +9,7 @@ pub use crate::features::chrome_common::{
 pub use crate::features::openai_common::GPTConfigs;
 use crate::utils::get_domain_from_url;
 use crate::website::CronType;
+use crate::reqwest;
 use reqwest::header::{AsHeaderName, HeaderMap, HeaderName, HeaderValue, IntoHeaderName};
 use std::time::Duration;
 

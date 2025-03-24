@@ -19,6 +19,7 @@ use crate::utils::{
 use crate::CaseInsensitiveString;
 use crate::Client;
 use crate::RelativeSelectors;
+use crate::reqwest;
 #[cfg(feature = "cron")]
 use async_job::{async_trait, Job, Runner};
 use hashbrown::{HashMap, HashSet};
@@ -1193,14 +1194,22 @@ impl Website {
         let client = Client::builder()
             .user_agent(user_agent)
             .redirect(policy)
-            .danger_accept_invalid_certs(self.configuration.accept_invalid_certs)
             .tcp_keepalive(Duration::from_secs(1));
 
+        #[cfg(feature = "rquest")]
+        let client = client.cert_verification(!self.configuration.accept_invalid_certs);
+        #[cfg(not(feature = "rquest"))]
+        let client = client.danger_accept_invalid_certs(self.configuration.accept_invalid_certs);
+
+        #[cfg(not(feature = "rquest"))]
         let client = if self.configuration.http2_prior_knowledge {
             client.http2_prior_knowledge()
         } else {
             client
         };
+
+        #[cfg(feature = "rquest")]
+        let client = client;
 
         let client = crate::utils::header_utils::setup_default_headers(
             client,
@@ -1236,12 +1245,12 @@ impl Website {
                     // use HTTP instead as reqwest does not support the protocol on linux.
                     if replace_plain_socks && socks {
                         if let Ok(proxy) =
-                            reqwest::Proxy::all(&proxie.replacen("socks://", "http://", 1))
+                            crate::reqwest::Proxy::all(&proxie.replacen("socks://", "http://", 1))
                         {
                             client = client.proxy(proxy);
                         }
                     } else {
-                        if let Ok(proxy) = reqwest::Proxy::all(proxie) {
+                        if let Ok(proxy) = crate::reqwest::Proxy::all(proxie) {
                             client = client.proxy(proxy);
                         }
                     }

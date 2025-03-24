@@ -83,6 +83,7 @@ h2 = "0.4"
 tower = { version = "0.5", features = ["limit"] }
 pin-project-lite = "0.2"
 sonic-rs = { version = "0.3", optional = true }
+rquest = { version = "5.0.0", optional = true, features = ["full"] }
 
 [dependencies.spider_chrome]
 version = "2"
@@ -231,6 +232,7 @@ string_interner_bucket_backend = ["dep:string-interner"]
 page_error_status_details = []
 simd = ["dep:sonic-rs"]
 firewall = ["dep:spider_firewall", "spider_chrome/firewall"]
+rquest = ["dep:rquest"]
 
 # Allows full concurrency.
 cowboy = []

@@ -45,18 +45,20 @@ use http_cache_semantics::{RequestLike, ResponseLike};
 
 use log::{info, log_enabled, Level};
 
-use reqwest::{
+use crate::reqwest::{
+    self,
     header::{HeaderName, HeaderValue},
     Response, StatusCode,
 };
 
 /// The request error.
-#[cfg(not(feature = "cache_request"))]
+#[cfg(all(not(feature = "cache_request")))]
 pub(crate) type RequestError = reqwest::Error;
 
 /// The request error.
 #[cfg(feature = "cache_request")]
 pub(crate) type RequestError = reqwest_middleware::Error;
+
 
 /// The wait for duration timeouts.
 #[cfg(feature = "chrome")]

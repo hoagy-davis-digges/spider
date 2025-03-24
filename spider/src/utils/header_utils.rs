@@ -1,6 +1,6 @@
 use crate::configuration::Configuration;
-use reqwest::header::{HOST, REFERER};
-use reqwest::{
+use crate::reqwest::header::{HOST, REFERER};
+use crate::reqwest::{
     header::{HeaderMap, HeaderValue},
     ClientBuilder,
 };
